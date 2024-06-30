@@ -5,10 +5,22 @@ export const RegistrationHook = {
   mounted() {
     console.info(`RegistrationHook mounted`);
 
+    this.checkUserVerifyingPlatformAuthenticatorAvailable(this)
+
     this.handleEvent("registration-challenge", (event) =>
       this.handleRegistration(event, this)
     );
   },
+
+  async checkUserVerifyingPlatformAuthenticatorAvailable(context) {
+    if (!(await await window.PublicKeyCredential?.isUserVerifyingPlatformAuthenticatorAvailable())) {
+      const error = new Error("Unable to register. Your device does not support passkeys. Please install a passkey authenticator.")
+      error.name = "NoUserVerifyingPlatformAuthenticatorAvailable"
+      handleError(error, context);
+      throw error;
+    }
+  }
+
 
   async handleRegistration(event, context) {
     try {

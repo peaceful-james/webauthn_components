@@ -7,6 +7,7 @@ export const AuthenticationHook = {
     console.info(`AuthenticationHook mounted`);
 
     this.checkConditionalUIAvailable(this);
+    this.checkUserVerifyingPlatformAuthenticatorAvailable(this)
 
     this.handleEvent("authentication-challenge", (event) =>
       this.handlePasskeyAuthentication(event, this, "optional")
@@ -16,6 +17,16 @@ export const AuthenticationHook = {
       this.handlePasskeyAuthentication(event, this, "conditional")
     );
   },
+
+  async checkUserVerifyingPlatformAuthenticatorAvailable(context) {
+    if (!(await await window.PublicKeyCredential?.isUserVerifyingPlatformAuthenticatorAvailable())) {
+      const error = new Error("Unable to authenticate. Your device does not support passkeys. Please install a passkey authenticator.")
+      error.name = "NoUserVerifyingPlatformAuthenticatorAvailable"
+      handleError(error, context);
+      throw error;
+    }
+  }
+
 
   async checkConditionalUIAvailable(context) {
     if (!(await browserSupportsPasskeyAutofill())) {
