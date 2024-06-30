@@ -45,16 +45,14 @@ export const RegistrationHook = {
 
       const publicKey = {
         attestation,
-        authenticatorSelection: {
-          authenticatorAttachment: "platform",
-          requireResidentKey: requireResidentKey,
-        },
+        authenticatorSelection: {authenticatorAttachment: "platform"},
         challenge: challengeArray.buffer,
         excludeCredentials,
         pubKeyCredParams: [
           { alg: -7, type: "public-key" },
           { alg: -257, type: "public-key" },
         ],
+        residentKey: "required",
         rp,
         timeout,
         user,
