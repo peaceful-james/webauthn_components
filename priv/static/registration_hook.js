@@ -21,6 +21,10 @@ export const RegistrationHook = {
         timeout,
         user,
       } = event;
+      const isUserVerifyingPlatformAuthenticatorAvailable = await window.PublicKeyCredential?.isUserVerifyingPlatformAuthenticatorAvailable()
+      if (!isUserVerifyingPlatformAuthenticatorAvailable) {
+        throw Error("Your device does not support passkeys. Please install a passkey authenticator.")
+      }
       const challengeArray = base64ToArray(challenge);
 
       user.id = base64ToArray(user.id).buffer;
