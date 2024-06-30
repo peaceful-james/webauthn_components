@@ -19,13 +19,13 @@ export const AuthenticationHook = {
   },
 
   async checkUserVerifyingPlatformAuthenticatorAvailable(context) {
-    if (!(await await window.PublicKeyCredential?.isUserVerifyingPlatformAuthenticatorAvailable())) {
+    if (!(await window.PublicKeyCredential?.isUserVerifyingPlatformAuthenticatorAvailable())) {
       const error = new Error("Unable to authenticate. Your device does not support passkeys. Please install a passkey authenticator.")
       error.name = "NoUserVerifyingPlatformAuthenticatorAvailable"
       handleError(error, context);
       throw error;
     }
-  }
+  },
 
 
   async checkConditionalUIAvailable(context) {
