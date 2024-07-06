@@ -120,8 +120,7 @@ defmodule WebauthnComponents.RegistrationComponent do
   end
 
   def handle_event("register", _params, socket) do
-    %{assigns: assigns, endpoint: endpoint} = socket
-    %{app: app_name, id: id, resident_key: resident_key, webauthn_user: webauthn_user} = assigns
+    %{app: app_name, id: id, resident_key: resident_key, webauthn_user: webauthn_user} = socket.assigns
 
     if not is_struct(webauthn_user, WebauthnUser) do
       raise "user must be a WebauthnComponents.WebauthnUser struct."
@@ -132,7 +131,7 @@ defmodule WebauthnComponents.RegistrationComponent do
     challenge =
       Wax.new_registration_challenge(
         attestation: attestation,
-        origin: endpoint.url(),
+        origin: socket.endpoint.url(),
         rp_id: :auto,
         trusted_attestation_types: [:none, :basic]
       )
