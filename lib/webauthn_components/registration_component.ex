@@ -120,7 +120,8 @@ defmodule WebauthnComponents.RegistrationComponent do
   end
 
   def handle_event("register", _params, socket) do
-    %{app: app_name, id: id, resident_key: resident_key, webauthn_user: webauthn_user} = socket.assigns
+    %{app: app_name, id: id, resident_key: resident_key, webauthn_user: webauthn_user} =
+      socket.assigns
 
     if not is_struct(webauthn_user, WebauthnUser) do
       raise "user must be a WebauthnComponents.WebauthnUser struct."
@@ -151,17 +152,14 @@ defmodule WebauthnComponents.RegistrationComponent do
       user: webauthn_user
     }
 
-    {
-      :noreply,
-      socket
-      |> assign(:challenge, challenge)
-      |> push_event("registration-challenge", challenge_data)
-    }
+    socket
+    |> assign(:challenge, challenge)
+    |> push_event("registration-challenge", challenge_data)
+    |> then(&{:noreply, &1})
   end
 
   def handle_event("registration-attestation", payload, socket) do
     %{challenge: challenge, webauthn_user: webauthn_user} = socket.assigns
-    IO.inspect(payload, label: "payload")
 
     %{
       "attestation64" => attestation_64,
@@ -176,7 +174,6 @@ defmodule WebauthnComponents.RegistrationComponent do
 
     case wax_response do
       {:ok, {authenticator_data, _result}} ->
-        IO.inspect(wax_response, label: "wax_response")
         %{attested_credential_data: %{credential_public_key: public_key}} = authenticator_data
         key = %{key_id: raw_id, public_key: public_key}
         send(self(), {:registration_successful, key: key, webauthn_user: webauthn_user})
