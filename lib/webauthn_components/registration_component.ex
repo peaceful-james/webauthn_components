@@ -138,18 +138,18 @@ defmodule WebauthnComponents.RegistrationComponent do
       )
 
     challenge_data = %{
-      attestation: attestation,
-      challenge: Base.encode64(challenge.bytes, padding: false),
-      excludeCredentials: [],
-      id: id,
-      residentKey: resident_key,
-      requireResidentKey: resident_key == :required,
-      rp: %{
-        id: challenge.rp_id,
-        name: app_name
+      "attestation" => attestation,
+      "challenge" => Base.encode64(challenge.bytes, padding: false),
+      "excludeCredentials" => [],
+      "id" => id,
+      "residentKey" => resident_key,
+      "requireResidentKey" => resident_key == :required,
+      "rp" => %{
+        "id" => challenge.rp_id,
+        "name" => app_name
       },
-      timeout: 60_000,
-      user: webauthn_user
+      "timeout" => 60_000,
+      "user" => webauthn_user
     }
 
     socket
