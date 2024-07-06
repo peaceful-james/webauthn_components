@@ -4,8 +4,6 @@ import { AbortControllerService } from "./abort_controller";
 
 export const AuthenticationHook = {
   mounted() {
-    console.info(`AuthenticationHook mounted`);
-
     this.checkConditionalUIAvailable(this);
 
     this.handleEvent("authentication-challenge", (event) =>

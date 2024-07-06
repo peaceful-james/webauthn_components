@@ -3,8 +3,6 @@ import { AbortControllerService } from "./abort_controller";
 
 export const RegistrationHook = {
   mounted() {
-    console.info(`RegistrationHook mounted`);
-
     if (this.el.dataset.check_uvpa_available) {
       this.checkUserVerifyingPlatformAuthenticatorAvailable(this)
     }

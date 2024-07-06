@@ -1,7 +1,5 @@
 export const SupportHook = {
   mounted() {
-    console.info(`SupportHook mounted`);
-
     const supported = "credentials" in navigator;
 
     if (!supported) {
