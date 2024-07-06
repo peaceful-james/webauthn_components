@@ -143,7 +143,6 @@ defmodule WebauthnComponents.RegistrationComponent do
       "excludeCredentials" => [],
       "id" => id,
       "residentKey" => resident_key,
-      "requireResidentKey" => resident_key == :required,
       "rp" => %{
         "id" => challenge.rp_id,
         "name" => app_name
