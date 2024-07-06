@@ -64,29 +64,25 @@ defmodule WebauthnComponents.RegistrationComponent do
   alias WebauthnComponents.WebauthnUser
 
   def mount(socket) do
-    {
-      :ok,
-      socket
-      |> assign(:challenge, fn -> nil end)
-      |> assign_new(:id, fn -> "registration-component" end)
-      |> assign_new(:class, fn -> "" end)
-      |> assign_new(:webauthn_user, fn -> nil end)
-      |> assign_new(:disabled, fn -> false end)
-      |> assign_new(:resident_key, fn -> :required end)
-      |> assign_new(:check_uvpa_available, fn -> false end)
-      |> assign_new(:display_text, fn -> "Sign Up" end)
-      |> assign_new(:show_icon?, fn -> true end)
-      |> assign_new(:relying_party, fn -> nil end)
-    }
+    socket
+    |> assign(:challenge, fn -> nil end)
+    |> assign_new(:id, fn -> "registration-component" end)
+    |> assign_new(:class, fn -> "" end)
+    |> assign_new(:webauthn_user, fn -> nil end)
+    |> assign_new(:disabled, fn -> false end)
+    |> assign_new(:resident_key, fn -> :required end)
+    |> assign_new(:check_uvpa_available, fn -> false end)
+    |> assign_new(:display_text, fn -> "Sign Up" end)
+    |> assign_new(:show_icon?, fn -> true end)
+    |> assign_new(:relying_party, fn -> nil end)
+    |> then(&{:ok, &1})
   end
 
   def update(%{webauthn_user: webauthn_user}, socket) do
     if is_struct(webauthn_user, WebauthnUser) do
-      {
-        :ok,
-        socket
-        |> assign(:webauthn_user, webauthn_user)
-      }
+      socket
+      |> assign(:webauthn_user, webauthn_user)
+      |> then(&{:ok, &1})
     else
       send(self(), {:invalid_webauthn_user, webauthn_user})
       {:ok, socket}
@@ -94,11 +90,9 @@ defmodule WebauthnComponents.RegistrationComponent do
   end
 
   def update(assigns, socket) do
-    {
-      :ok,
-      socket
-      |> assign(assigns)
-    }
+    socket
+    |> assign(assigns)
+    |> then(&{:ok, &1})
   end
 
   def render(assigns) do
@@ -168,6 +162,7 @@ defmodule WebauthnComponents.RegistrationComponent do
 
   def handle_event("registration-attestation", payload, socket) do
     %{challenge: challenge, webauthn_user: webauthn_user} = socket.assigns
+    IO.inspect(payload, label: "payload")
 
     %{
       "attestation64" => attestation_64,
@@ -182,6 +177,7 @@ defmodule WebauthnComponents.RegistrationComponent do
 
     case wax_response do
       {:ok, {authenticator_data, _result}} ->
+        IO.inspect(wax_response, label: "wax_response")
         %{attested_credential_data: %{credential_public_key: public_key}} = authenticator_data
         key = %{key_id: raw_id, public_key: public_key}
         send(self(), {:registration_successful, key: key, webauthn_user: webauthn_user})
