@@ -158,7 +158,7 @@ defmodule WebauthnComponents.RegistrationComponent do
   end
 
   def handle_event("registration-attestation", payload, socket) do
-    %{id: component_id, challenge: challenge, webauthn_user: webauthn_user} = socket.assigns
+    %{challenge: challenge, webauthn_user: webauthn_user} = socket.assigns
 
     %{
       "attestation64" => attestation_64,
@@ -175,25 +175,23 @@ defmodule WebauthnComponents.RegistrationComponent do
       {:ok, {authenticator_data, _result}} ->
         %{attested_credential_data: %{credential_public_key: public_key}} = authenticator_data
         key = %{key_id: raw_id, public_key: public_key}
-        send(self(), {:registration_successful, component_id, key: key, webauthn_user: webauthn_user})
+        send(self(), {:registration_successful, key: key, webauthn_user: webauthn_user})
 
       {:error, error} ->
         message = Exception.message(error)
-        send(self(), {:registration_failure, component_id, message: message})
+        send(self(), {:registration_failure, message: message})
     end
 
     {:noreply, socket}
   end
 
   def handle_event("error", payload, socket) do
-    %{id: component_id} = socket.assigns
-    send(self(), {:registration_error, component_id, payload})
+    send(self(), {:registration_error, payload})
     {:noreply, socket}
   end
 
   def handle_event(event, payload, socket) do
-    %{id: component_id} = socket.assigns
-    send(self(), {:registration_invalid_event, component_id, event, payload})
+    send(self(), {:registration_invalid_event, event, payload})
     {:noreply, socket}
   end
 end
