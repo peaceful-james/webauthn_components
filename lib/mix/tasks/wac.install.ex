@@ -33,7 +33,7 @@ defmodule Mix.Tasks.Wac.Install do
   alias Wac.Gen.Fixtures
   alias Wac.Gen.Javascript
   alias Wac.Gen.Components
-  alias Wac.Gen.AppHtml
+  alias Wac.Gen.RootHtml
   alias Wac.Gen.Misc
 
   @version Mix.Project.config()[:version]
@@ -104,8 +104,8 @@ defmodule Mix.Tasks.Wac.Install do
         if opts[:web] do
           Controllers.copy_templates(assigns)
           LiveViews.copy_templates(assigns)
-          AppHtml.update_app_html(assigns)
-          AppHtml.update_page_html(assigns)
+          RootHtml.update_root_html(assigns)
+          RootHtml.update_page_html(assigns)
           SessionHooks.copy_templates(assigns)
           Components.copy_templates(assigns)
 
