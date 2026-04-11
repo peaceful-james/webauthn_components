@@ -1,9 +1,9 @@
-defmodule Wac.Gen.AppHtml do
+defmodule Wac.Gen.RootHtml do
   @moduledoc false
 
-  def update_app_html(assigns) do
+  def update_root_html(assigns) do
     web_snake_case = Keyword.fetch!(assigns, :web_snake_case)
-    file_path = Path.join(["lib", web_snake_case, "components", "layouts", "app.html.heex"])
+    file_path = Path.join(["lib", web_snake_case, "components", "layouts", "root.html.heex"])
 
     modified_file_contents =
       file_path
